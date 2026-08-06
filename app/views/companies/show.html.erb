@@ -1,0 +1,46 @@
+<div class="flex-1 overflow-y-auto p-8 space-y-8 font-mono bg-gradient-to-b from-[#180B0E] via-[#220E13] to-[#14080B]">
+  <div class="flex items-center justify-between border-b border-[#8B3A2B]/40 pb-6">
+    <div>
+      <div class="flex items-center space-x-2">
+        <a href="<%= companies_path %>" class="text-xs font-bold text-[#D4B499] hover:text-[#E58A67] uppercase">← COMPANIES</a>
+        <span class="text-[#8B3A2B]">/</span>
+        <h1 class="text-2xl font-extrabold text-[#F4E8D7] font-sans uppercase"><%= @company.name %></h1>
+        <span class="px-2.5 py-0.5 text-[9px] font-bold uppercase bg-[#2A1218] text-[#F4E8D7] rust-border">
+          <%= @company.tier %>
+        </span>
+      </div>
+      <p class="text-xs text-[#D4B499] mt-1 uppercase font-mono"><%= @company.industry %> • <%= @company.website %></p>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <div class="text-right">
+        <span class="text-[9px] uppercase font-bold text-[#A47F6E] block">HIRING VELOCITY</span>
+        <span class="text-xl font-bold font-mono text-[#E58A67]"><%= @company.hiring_velocity_score %>%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-6">
+      <h2 class="text-xs font-bold uppercase tracking-widest text-[#A47F6E]">// OPEN REQUISITIONS</h2>
+      <% @active_jobs.each do |job| %>
+        <div class="bg-rust-onion-card rust-border rust-hover p-6 flex items-center justify-between shadow-md">
+          <div>
+            <h3 class="text-base font-bold font-sans text-[#F4E8D7] uppercase"><%= job.title %></h3>
+            <span class="text-xs text-[#D4B499] block mt-1"><%= job.department %> • <%= job.location %> • <%= job.formatted_salary_range %></span>
+          </div>
+          <%= link_to job_posting_pipeline_path(job), class: "px-4 py-2 text-xs font-bold text-white bg-rust-onion-btn uppercase tracking-wider shadow-md" do %>
+            VIEW PIPELINE (<%= job.candidate_applications.count %>) →
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="space-y-6">
+      <h2 class="text-xs font-bold uppercase tracking-widest text-[#A47F6E]">// AI COMPANY SUMMARY</h2>
+      <div class="bg-rust-onion-card rust-border p-6 text-xs text-[#D4B499] leading-relaxed shadow-md font-sans">
+        <%= @company.ai_summary.presence || "High-growth enterprise client expanding core engineering team. Strong hiring velocity and candidate conversion rate." %>
+      </div>
+    </div>
+  </div>
+</div>

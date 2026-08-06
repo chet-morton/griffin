@@ -1,0 +1,11 @@
+<div class="bg-rust-onion-card rust-border p-6 font-mono space-y-3 shadow-md">
+  <span class="text-[9px] font-bold uppercase tracking-widest text-[#A47F6E] block"><%= label %></span>
+  <div class="flex items-baseline justify-between">
+    <span class="text-2xl font-extrabold text-[#F4E8D7] font-mono tracking-tight"><%= value %></span>
+    <% if change.present? %>
+      <span class="text-[10px] font-bold px-2 py-0.5 uppercase bg-[#2A1218] text-[#E58A67] rust-border">
+        <%= change %>
+      </span>
+    <% end %>
+  </div>
+</div>

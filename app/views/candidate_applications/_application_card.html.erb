@@ -1,0 +1,47 @@
+<div id="candidate_application_<%= application.id %>"
+     data-application-id="<%= application.id %>"
+     draggable="true"
+     class="bg-[#180B0E] rust-border rust-hover p-4 shadow-sm cursor-grab active:cursor-grabbing transition-all font-sans group">
+
+  <div class="flex items-start justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 bg-gradient-to-br from-[#C85A32] to-[#6E243A] text-white font-bold text-xs flex items-center justify-center font-mono shadow">
+        <%= application.candidate.initials %>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold text-[#F4E8D7] group-hover:text-[#E58A67] transition-colors">
+          <%= application.candidate.full_name %>
+        </h4>
+        <span class="text-[11px] text-[#D4B499] block font-mono"><%= application.candidate.email %></span>
+      </div>
+    </div>
+
+    <!-- Overall Score Badge -->
+    <% if application.overall_score.present? %>
+      <div class="px-2 py-0.5 text-xs font-bold font-mono bg-[#2A1218] text-[#E58A67] rust-border border-[#C85A32]">
+        <%= application.overall_score %>
+      </div>
+    <% else %>
+      <span class="text-[10px] text-[#A47F6E] bg-[#2A1218] px-1.5 py-0.5 rust-border font-mono">Unrated</span>
+    <% end %>
+  </div>
+
+  <!-- Stage Move Selector & Rubric Link -->
+  <div class="mt-4 pt-3 border-t border-[#8B3A2B]/30 flex items-center justify-between gap-2 font-mono">
+    <!-- Quick Stage Selector Dropdown -->
+    <select data-action="change->pipeline-drag#selectStage"
+            data-application-id="<%= application.id %>"
+            class="bg-[#1D0C10] text-[10px] text-[#D4B499] rust-border px-2 py-1 focus:outline-none focus:border-[#C85A32]">
+      <option value="">Move to...</option>
+      <% local_assigns[:stages]&.each do |stage| %>
+        <option value="<%= stage.id %>" <%= "selected" if stage.id == application.current_stage_id %>>
+          → <%= stage.name %>
+        </option>
+      <% end %>
+    </select>
+
+    <%= link_to candidate_application_path(application), class: "px-2 py-1 text-[10px] font-bold text-white bg-rust-onion-btn transition-all tracking-wider", data: { turbo_frame: "_top" } do %>
+      Evaluate →
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="flex-1 overflow-y-auto p-8 space-y-8 font-mono bg-gradient-to-b from-[#180B0E] via-[#220E13] to-[#14080B]">
+  <div class="flex items-center justify-between border-b border-[#8B3A2B]/40 pb-6">
+    <div>
+      <div class="flex items-center space-x-2">
+        <a href="<%= job_posting_pipeline_path(@job_posting) %>" class="text-xs font-bold text-[#D4B499] hover:text-[#E58A67] uppercase">← PIPELINE</a>
+        <span class="text-[#8B3A2B]">/</span>
+        <h1 class="text-2xl font-extrabold text-[#F4E8D7] font-sans uppercase">AI CANDIDATE VECTOR MATCHER</h1>
+      </div>
+      <p class="text-xs text-[#D4B499] mt-1 font-mono uppercase">
+        COMPARING RESUME EMBEDDINGS AGAINST <span class="font-bold text-[#F4E8D7]"><%= @job_posting.title %></span> REQUIREMENTS USING <code class="font-mono text-[#E58A67]">PGVECTOR</code> DISTANCE CALCULATIONS.
+      </p>
+    </div>
+
+    <span class="px-3 py-1 text-xs font-bold text-[#E58A67] bg-[#2A1218] rust-border border-[#C85A32] flex items-center space-x-2 uppercase">
+      <span class="w-2 h-2 rounded-full bg-[#E58A67] animate-pulse"></span>
+      <span>PGVECTOR ENABLED</span>
+    </span>
+  </div>
+
+  <div class="space-y-4">
+    <% @matches.each_with_index do |match, index| %>
+      <% candidate = match[:candidate] %>
+      <div class="bg-rust-onion-card rust-border rust-hover p-6 shadow-lg flex items-center justify-between group transition-all">
+        <div class="flex items-center space-x-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-[#C85A32] to-[#6E243A] text-white font-bold text-sm flex items-center justify-center font-mono">
+            #<%= index + 1 %>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold font-sans text-[#F4E8D7] group-hover:text-[#E58A67] transition-colors uppercase">
+              <%= candidate.full_name %>
+            </h3>
+            <span class="text-xs text-[#D4B499] font-mono"><%= candidate.email %></span>
+            
+            <div class="flex items-center space-x-2 mt-3">
+              <% match[:top_skills].each do |skill| %>
+                <span class="px-2.5 py-0.5 text-[10px] font-bold font-mono uppercase bg-[#180B0E] text-[#D4B499] rust-border">
+                  <%= skill %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-8">
+          <div class="text-right">
+            <span class="text-[9px] uppercase font-bold text-[#A47F6E] block">VECTOR SIMILARITY</span>
+            <div class="text-xl font-extrabold text-[#E58A67] font-mono">
+              <%= match[:match_percentage] %>%
+            </div>
+            <span class="text-[9px] text-[#A47F6E] font-mono block">distance: <%= match[:distance] %></span>
+          </div>
+
+          <% app = candidate.candidate_applications.find_by(job_posting: @job_posting) %>
+          <% if app %>
+            <%= link_to candidate_application_path(app), class: "px-4 py-2 text-xs font-bold text-white bg-rust-onion-btn uppercase tracking-wider shadow-md" do %>
+              EVALUATE CANDIDATE →
+            <% end %>
+          <% else %>
+            <span class="px-3 py-1.5 text-xs text-[#A47F6E] bg-[#180B0E] rust-border uppercase">UNAPPLIED</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

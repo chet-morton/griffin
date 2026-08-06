@@ -1,0 +1,91 @@
+<div class="flex-1 overflow-y-auto p-8 space-y-8 font-sans">
+  <div class="flex items-center justify-between border-b border-[#8B3A2B]/40 pb-6">
+    <div class="flex items-center space-x-6">
+      <div class="w-16 h-16 bg-gradient-to-br from-[#C85A32] via-[#A04028] to-[#6E243A] text-white font-bold text-2xl flex items-center justify-center font-mono shadow-lg">
+        <%= @candidate.initials %>
+      </div>
+      <div>
+        <div class="flex items-center space-x-4">
+          <h1 class="text-3xl font-extrabold text-[#F4E8D7]"><%= @candidate.full_name %></h1>
+          <%= render CandidateFitBadgeComponent.new(score: @candidate.fit_score) %>
+        </div>
+        <p class="text-xs text-[#D4B499] mt-1 font-mono"><%= @candidate.title %> • <%= @candidate.location %> • <%= @candidate.email %></p>
+      </div>
+    </div>
+
+    <div class="text-right font-mono">
+      <span class="text-[10px] uppercase font-bold text-[#A47F6E] block">Estimated Salary</span>
+      <span class="text-2xl font-extrabold text-[#E58A67]">$<%= number_with_delimiter(@candidate.estimated_compensation) %> / yr</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-6">
+      <!-- AI Career Trajectory -->
+      <div class="bg-rust-onion-card rust-border p-6 space-y-2 shadow-md">
+        <span class="text-xs text-[#E58A67] font-bold font-mono">AI Summary & Trajectory</span>
+        <div class="text-base font-bold text-[#F4E8D7]"><%= @candidate.career_trajectory %></div>
+        <p class="text-xs text-[#D4B499] leading-relaxed mt-2"><%= @candidate.ai_summary %></p>
+      </div>
+
+      <!-- Employment Experience Timeline -->
+      <div class="bg-rust-onion-card rust-border p-6 space-y-6 shadow-md">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-[#A47F6E] font-mono">Work History</h3>
+        
+        <div class="space-y-6">
+          <% if @experiences.any? %>
+            <% @experiences.each do |exp| %>
+              <div class="border-l-2 border-[#C85A32] pl-4 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-[#F4E8D7]"><%= exp.role_title %> at <%= exp.company_name %></span>
+                  <span class="text-[#A47F6E] font-mono"><%= exp.duration %></span>
+                </div>
+                <p class="text-xs text-[#D4B499] leading-relaxed"><%= exp.description %></p>
+                <span class="text-[10px] font-mono text-[#A47F6E] block">Skills: <%= exp.skills_used %></span>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-xs text-[#A47F6E] italic">No work history recorded.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Raw Resume Text -->
+      <div class="bg-rust-onion-card rust-border p-6 space-y-3 shadow-md">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-[#A47F6E] font-mono">Resume Text</h3>
+        <div class="font-mono text-xs text-[#D4B499] whitespace-pre-wrap leading-relaxed bg-[#180B0E] p-5 rust-border">
+          <%= @candidate.resume_text %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Active Applications & Skills -->
+    <div class="space-y-6 font-mono">
+      <div class="bg-rust-onion-card rust-border p-6 space-y-4 shadow-md">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-[#A47F6E]">Active Applications</h3>
+        <% @applications.each do |app| %>
+          <div class="bg-[#180B0E] p-4 rust-border space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-[#F4E8D7] font-sans"><%= app.job_posting.title %></span>
+              <span class="text-[10px] font-bold px-2 py-0.5 bg-[#C85A32] text-white"><%= app.current_stage.name %></span>
+            </div>
+            <%= link_to candidate_application_path(app), class: "text-xs font-bold text-[#E58A67] hover:underline block" do %>
+              Open Skill Rubric →
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="bg-rust-onion-card rust-border p-6 space-y-4 shadow-md">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-[#A47F6E]">Verified Skills</h3>
+        <div class="flex flex-wrap gap-2">
+          <% @candidate.tag_list.each do |skill| %>
+            <span class="px-3 py-1 text-xs font-mono font-bold uppercase bg-[#180B0E] text-[#D4B499] rust-border">
+              #<%= skill %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

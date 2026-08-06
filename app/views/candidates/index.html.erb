@@ -1,0 +1,52 @@
+<div class="flex-1 overflow-y-auto p-8 space-y-8 font-sans">
+  <div class="flex items-end justify-between border-b border-[#8B3A2B]/40 pb-6">
+    <div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-[#F4E8D7]">Candidates</h1>
+      <p class="text-xs text-[#D4B499] mt-1 font-mono">Candidate directory, AI fit scores, and salary estimates.</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <% @candidates.each_with_index do |candidate, idx| %>
+      <div class="bg-rust-onion-card rust-border rust-hover p-6 shadow-sm flex items-center justify-between group transition-all">
+        <div class="flex items-center space-x-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-[#C85A32] to-[#6E243A] text-white font-bold text-sm flex items-center justify-center font-mono">
+            #<%= idx + 1 %>
+          </div>
+          <div>
+            <div class="flex items-center space-x-3">
+              <h2 class="text-lg font-bold text-[#F4E8D7] group-hover:text-[#E58A67] transition-colors">
+                <%= candidate.full_name %>
+              </h2>
+              <span class="text-xs text-[#D4B499] font-mono">• <%= candidate.title %></span>
+            </div>
+            <span class="text-xs text-[#D4B499] block mt-1 font-mono"><%= candidate.email %> • <%= candidate.location %></span>
+
+            <div class="flex items-center space-x-2 mt-3 font-mono">
+              <% candidate.tag_list.each do |tag| %>
+                <span class="px-2 py-0.5 text-[10px] font-bold bg-[#180B0E] text-[#D4B499] rust-border">
+                  #<%= tag %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-8 font-mono">
+          <div class="text-right">
+            <span class="text-[10px] uppercase font-bold text-[#A47F6E] block">Est. Salary</span>
+            <span class="text-sm font-bold text-[#E58A67]">$<%= number_with_delimiter(candidate.estimated_compensation) %> / yr</span>
+          </div>
+
+          <div>
+            <%= render CandidateFitBadgeComponent.new(score: candidate.fit_score) %>
+          </div>
+
+          <%= link_to candidate_path(candidate), class: "px-4 py-2 text-xs font-bold text-white bg-rust-onion-btn transition-all uppercase tracking-wider shadow-md" do %>
+            View Profile →
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

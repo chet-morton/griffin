@@ -1,0 +1,16 @@
+source "https://rubygems.org"
+
+ruby ">= 3.0.0"
+
+gem "rails", "~> 8.0.0"
+gem "sqlite3", ">= 1.6"
+gem "puma", ">= 6.0"
+gem "turbo-rails"
+gem "stimulus-rails"
+gem "view_component"
+gem "solid_queue"
+gem "solid_cache"
+gem "solid_cable"
+gem "net-smtp"
+gem "net-imap"
+gem "net-pop"

@@ -1,0 +1,52 @@
+<div class="flex-1 overflow-y-auto p-8 space-y-8 font-sans">
+  <div class="flex items-end justify-between border-b border-[#8B3A2B]/40 pb-6">
+    <div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-[#F4E8D7]">Job Postings</h1>
+      <p class="text-xs text-[#D4B499] mt-1 font-mono">Manage open positions, skill matrix rubrics, and candidate pipelines.</p>
+    </div>
+    <%= link_to "+ Add Job Posting", new_job_posting_path, class: "px-4 py-2 text-xs font-bold text-white bg-rust-onion-btn transition-all font-mono uppercase tracking-wider shadow-lg shadow-[#C85A32]/20" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @job_postings.each_with_index do |posting, idx| %>
+      <div class="bg-rust-onion-card rust-border rust-hover p-6 flex flex-col justify-between group transition-all shadow-md">
+        <div>
+          <div class="flex items-center justify-between border-b border-[#8B3A2B]/30 pb-3">
+            <span class="text-xs font-bold text-[#E58A67] font-mono">
+              Job #<%= idx + 1 %>
+            </span>
+            <span class="px-2 py-0.5 text-[10px] font-bold uppercase bg-[#2A1218] text-[#F4E8D7] rust-border font-mono">
+              <%= posting.department %>
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-[#F4E8D7] group-hover:text-[#E58A67] transition-colors mt-4">
+            <%= posting.title %>
+          </h2>
+          <p class="text-xs text-[#D4B499] line-clamp-2 mt-2 leading-relaxed"><%= posting.description %></p>
+
+          <div class="mt-6 pt-4 border-t border-[#8B3A2B]/30 grid grid-cols-2 gap-3 text-xs font-mono">
+            <div class="bg-[#180B0E] p-3 rust-border">
+              <span class="text-[#A47F6E] text-[10px] block">Skill Criteria</span>
+              <span class="text-[#F4E8D7] font-bold text-sm"><%= posting.skill_requirements.size %> Skills</span>
+            </div>
+            <div class="bg-[#180B0E] p-3 rust-border">
+              <span class="text-[#A47F6E] text-[10px] block">Candidates</span>
+              <span class="text-[#E58A67] font-bold text-sm"><%= posting.candidate_applications.count %> Applicants</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-[#8B3A2B]/30 flex items-center justify-between font-mono">
+          <%= link_to job_posting_candidate_matches_path(posting), class: "text-xs font-bold text-[#D4B499] hover:text-[#E58A67] flex items-center space-x-1" do %>
+            <span>AI Match</span>
+          <% end %>
+
+          <%= link_to job_posting_pipeline_path(posting), class: "px-3 py-1.5 text-xs font-bold text-white bg-rust-onion-btn transition-all tracking-wider" do %>
+            Open Pipeline →
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="flex-1 overflow-y-auto p-8 space-y-8 font-sans">
+  <div class="flex items-end justify-between border-b border-[#8B3A2B]/40 pb-6">
+    <div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-[#F4E8D7]">Companies</h1>
+      <p class="text-xs text-[#D4B499] mt-1 font-mono">Client accounts, open jobs, and hiring velocity.</p>
+    </div>
+    <%= link_to "+ Add Company", new_company_path, class: "px-4 py-2 text-xs font-bold text-white bg-rust-onion-btn transition-all font-mono uppercase tracking-wider shadow-lg shadow-[#C85A32]/20" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @companies.each_with_index do |company, idx| %>
+      <div class="bg-rust-onion-card rust-border rust-hover p-6 flex flex-col justify-between group transition-all shadow-md">
+        <div>
+          <div class="flex items-center justify-between border-b border-[#8B3A2B]/30 pb-3 font-mono">
+            <span class="text-xs font-bold text-[#E58A67]">
+              Company #<%= idx + 1 %>
+            </span>
+            <span class="px-2 py-0.5 text-[10px] font-bold uppercase bg-[#2A1218] text-[#F4E8D7] rust-border">
+              <%= company.tier %>
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-[#F4E8D7] group-hover:text-[#E58A67] transition-colors mt-4">
+            <%= company.name %>
+          </h2>
+          <p class="text-xs text-[#D4B499] mt-1 font-mono"><%= company.industry %> • <%= company.website || "No URL" %></p>
+
+          <div class="mt-6 pt-4 border-t border-[#8B3A2B]/30 grid grid-cols-2 gap-3 text-xs font-mono">
+            <div class="bg-[#180B0E] p-3 rust-border">
+              <span class="text-[#A47F6E] text-[10px] block">Open Jobs</span>
+              <span class="text-[#F4E8D7] font-bold text-sm"><%= company.active_jobs_count %> Open</span>
+            </div>
+            <div class="bg-[#180B0E] p-3 rust-border">
+              <span class="text-[#A47F6E] text-[10px] block">Hiring Velocity</span>
+              <span class="text-[#E58A67] font-bold text-sm"><%= company.hiring_velocity_score %>%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-[#8B3A2B]/30 flex items-center justify-between font-mono">
+          <span class="text-[10px] text-[#A47F6E]">Active Account</span>
+          <%= link_to company_path(company), class: "text-xs font-bold text-[#F4E8D7] hover:text-[#E58A67]" do %>
+            View Company →
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

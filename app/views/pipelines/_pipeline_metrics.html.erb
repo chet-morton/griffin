@@ -1,0 +1,12 @@
+<div class="hidden md:flex items-center space-x-6 font-mono">
+  <div class="text-center px-3 py-1 bg-[#180B0E] rounded-none rust-border">
+    <span class="text-[9px] uppercase font-bold text-[#A47F6E] block">TOTAL CANDIDATES</span>
+    <span class="text-sm font-extrabold text-[#F4E8D7]"><%= job_posting.candidate_applications.count %></span>
+  </div>
+  <div class="text-center px-3 py-1 bg-[#180B0E] rounded-none rust-border">
+    <span class="text-[9px] uppercase font-bold text-[#A47F6E] block">AVG QUALITY SCORE</span>
+    <span class="text-sm font-extrabold text-[#E58A67]">
+      <%= job_posting.candidate_applications.average(:overall_score)&.round(2) || "N/A" %> / 5.0
+    </span>
+  </div>
+</div>

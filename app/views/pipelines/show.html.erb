@@ -1,0 +1,67 @@
+<%= turbo_stream_from "job_posting_#{@job_posting.id}_pipeline" %>
+
+<div class="flex-1 flex flex-col h-full font-sans overflow-hidden" data-controller="pipeline-drag">
+  <!-- Pipeline Header -->
+  <div class="h-16 border-b border-[#8B3A2B]/40 bg-[#1D0C10]/90 px-8 flex items-center justify-between shrink-0">
+    <div>
+      <div class="flex items-center space-x-3">
+        <h1 class="text-lg font-bold text-[#F4E8D7] tracking-wider"><%= @job_posting.title %></h1>
+        <span class="px-2 py-0.5 text-[10px] font-bold bg-[#2A1218] text-[#F4E8D7] rust-border uppercase font-mono">
+          <%= @job_posting.department %>
+        </span>
+      </div>
+      <p class="text-xs text-[#D4B499] mt-0.5 font-mono"><%= @job_posting.location %> • <%= @job_posting.formatted_salary_range %></p>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <div id="job_posting_<%= @job_posting.id %>_metrics">
+        <%= render "pipelines/pipeline_metrics", job_posting: @job_posting %>
+      </div>
+
+      <%= link_to job_posting_candidate_matches_path(@job_posting), class: "px-3 py-1.5 text-xs font-bold text-white bg-rust-onion-btn transition-all font-mono uppercase tracking-wider shadow-md flex items-center space-x-1" do %>
+        <span>AI Match Candidates</span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Kanban Drag & Drop Columns -->
+  <div class="flex-1 p-8 overflow-x-auto">
+    <div class="flex space-x-6 h-full min-w-max">
+      <% @pipeline_stages.each_with_index do |stage, idx| %>
+        <div class="w-84 bg-rust-onion-card rust-border rounded-none flex flex-col h-full shadow-2xl transition-all"
+             data-stage-id="<%= stage.id %>"
+             data-pipeline-drag-target="column">
+
+          <!-- Stage Column Header -->
+          <div class="p-4 border-b border-[#8B3A2B]/40 bg-[#180B0E] flex items-center justify-between shrink-0 font-mono">
+            <div class="flex items-center space-x-2">
+              <h3 class="text-xs font-bold text-[#F4E8D7] uppercase tracking-wider"><%= stage.name %></h3>
+            </div>
+            <span class="px-2 py-0.5 text-xs font-bold bg-[#2A1218] text-[#F4E8D7] rust-border">
+              <%= stage.candidate_applications.size %>
+            </span>
+          </div>
+
+          <% if stage.exit_criteria.present? %>
+            <div class="px-4 py-2 bg-[#14080B] border-b border-[#8B3A2B]/30 text-[11px] text-[#D4B499] truncate">
+              Stage Goal: <%= stage.exit_criteria %>
+            </div>
+          <% end %>
+
+          <!-- Candidates Container -->
+          <div class="flex-1 p-4 overflow-y-auto space-y-4">
+            <% stage.candidate_applications.each do |application| %>
+              <%= render "candidate_applications/application_card", application: application, stages: @pipeline_stages %>
+            <% end %>
+
+            <% if stage.candidate_applications.empty? %>
+              <div class="h-32 border border-dashed border-[#8B3A2B]/40 flex flex-col items-center justify-center text-xs text-[#A47F6E] p-4 text-center">
+                <span>Drag candidate card here</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

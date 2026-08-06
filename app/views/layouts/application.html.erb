@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html class="h-full bg-[#180B0E] text-[#F4E8D7] font-sans antialiased selection:bg-[#C85A32] selection:text-white">
+  <head>
+    <title>Griffin ATS | Simple Candidate Evaluation & Hiring</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Turbo & Stimulus JavaScript Bundle for Hotwire Interactivity -->
+    <script type="module">
+      import * as Turbo from 'https://esm.sh/@hotwired/turbo@8.0.12'
+      import { Application, Controller } from 'https://esm.sh/@hotwired/stimulus@3.2.2'
+      
+      window.Turbo = Turbo
+      window.Stimulus = Application.start()
+
+      // Register Stimulus controllers
+      import PipelineDragController from '/javascript/controllers/pipeline_drag_controller.js'
+      import EvaluationMatrixController from '/javascript/controllers/evaluation_matrix_controller.js'
+      import KeyboardNavController from '/javascript/controllers/keyboard_nav_controller.js'
+      import CommandPaletteController from '/javascript/controllers/command_palette_controller.js'
+
+      Stimulus.register('pipeline-drag', PipelineDragController)
+      Stimulus.register('evaluation-matrix', EvaluationMatrixController)
+      Stimulus.register('keyboard-nav', KeyboardNavController)
+      Stimulus.register('command-palette', CommandPaletteController)
+    </script>
+
+    <style type="text/css">
+      body { font-family: 'Syne', sans-serif; background: linear-gradient(180deg, #180B0E 0%, #220E13 50%, #14080B 100%); color: #F4E8D7; min-height: 100vh; }
+      code, pre, .font-mono, kbd { font-family: 'Space Mono', monospace; }
+      .rust-border { border: 1px solid rgba(139, 58, 43, 0.4); }
+      .rust-hover:hover { border-color: #C85A32; }
+      .bg-rust-onion-card { background: linear-gradient(145deg, #241014 0%, #1A0B0E 100%); }
+      .bg-rust-onion-btn { background: linear-gradient(90deg, #C85A32 0%, #A04028 50%, #6E243A 100%); }
+      .bg-rust-onion-btn:hover { background: linear-gradient(90deg, #D86A42 0%, #B84A39 50%, #7E2A42 100%); }
+    </style>
+  </head>
+
+  <body class="h-full flex flex-col overflow-hidden bg-gradient-to-b from-[#180B0E] via-[#220E13] to-[#14080B] text-[#F4E8D7]" data-controller="command-palette">
+    <!-- Top Announcement Banner -->
+    <div class="h-7 bg-gradient-to-r from-[#C85A32] via-[#B84A39] to-[#6E243A] text-[#F4E8D7] text-xs font-mono font-bold tracking-wider uppercase flex items-center justify-between px-4 shrink-0 overflow-hidden select-none border-b border-[#C85A32]/40 shadow-md">
+      <div class="truncate flex items-center space-x-3">
+        <span>🐿️ GRIFFIN ATS</span>
+        <span>🌰</span>
+        <span>SIMPLE SKILL MATRICES & CANDIDATE PIPELINES</span>
+      </div>
+      <span class="hidden sm:inline font-bold text-[#F8DBCA]">ONLINE</span>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="h-14 rust-border border-t-0 bg-[#1D0C10]/90 px-6 flex items-center justify-between shrink-0 z-30 backdrop-blur-md">
+      <div class="flex items-center space-x-8">
+        <a href="/" class="flex items-center space-x-3 group">
+          <div class="w-8 h-8 bg-gradient-to-br from-[#C85A32] to-[#6E243A] text-lg flex items-center justify-center shadow-lg shadow-[#C85A32]/20 group-hover:scale-105 transition-transform">
+            🐿️
+          </div>
+          <span class="text-base font-extrabold tracking-wider font-mono text-[#F4E8D7]">GRIFFIN</span>
+        </a>
+
+        <nav class="hidden md:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase">
+          <%= link_to "Jobs", job_postings_path, class: "text-[#D4B499] hover:text-[#E58A67] transition-colors" %>
+          <%= link_to "Companies", companies_path, class: "text-[#D4B499] hover:text-[#E58A67] transition-colors" %>
+          <%= link_to "Candidates", candidates_path, class: "text-[#D4B499] hover:text-[#E58A67] transition-colors" %>
+          <%= link_to "Analytics", analytics_path, class: "text-[#D4B499] hover:text-[#E58A67] transition-colors" %>
+        </nav>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <!-- Quick Search Button -->
+        <button type="button" data-action="click->command-palette#toggle" class="flex items-center space-x-2 px-3 py-1 text-xs font-mono text-[#D4B499] bg-[#14080B] rust-border hover:border-[#C85A32] hover:text-white transition-all shadow-inner">
+          <span>Search jobs or candidates...</span>
+          <kbd class="px-1.5 py-0.5 text-[9px] bg-[#2A1218] text-[#E58A67] rust-border font-bold">⌘K</kbd>
+        </button>
+
+        <div class="flex items-center space-x-2 pl-4 border-l border-[#8B3A2B]/40 text-xs font-mono text-[#D4B499]">
+          <span class="text-base">🐿️</span>
+          <span class="font-bold text-[#F4E8D7]">Evaluator</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex overflow-hidden">
+      <%= yield %>
+    </main>
+
+    <%= render "shared/command_palette" %>
+  </body>
+</html>
