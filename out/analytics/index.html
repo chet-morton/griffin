@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="h-full bg-[#180B0E] text-[#F4E8D7] font-sans antialiased selection:bg-[#C85A32] selection:text-white">
+  <head>
+    <title>Griffin ATS | Simple Candidate Evaluation & Hiring</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="P0UKfXNAeodhDUlv9fLTV8KjdJIvtWVxwSFonmCX0SExJ7t7TnxGq8a2vjjbeM9ozZ8AStA8iMSzgY1bj0cSNA" />
+    
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Turbo & Stimulus JavaScript Bundle for Hotwire Interactivity -->
+    <script type="module">
+      import * as Turbo from 'https://esm.sh/@hotwired/turbo@8.0.12'
+      import { Application, Controller } from 'https://esm.sh/@hotwired/stimulus@3.2.2'
+      
+      window.Turbo = Turbo
+      window.Stimulus = Application.start()
+
+      // Register Stimulus controllers
+      import PipelineDragController from '/javascript/controllers/pipeline_drag_controller.js'
+      import EvaluationMatrixController from '/javascript/controllers/evaluation_matrix_controller.js'
+      import KeyboardNavController from '/javascript/controllers/keyboard_nav_controller.js'
+      import CommandPaletteController from '/javascript/controllers/command_palette_controller.js'
+
+      Stimulus.register('pipeline-drag', PipelineDragController)
+      Stimulus.register('evaluation-matrix', EvaluationMatrixController)
+      Stimulus.register('keyboard-nav', KeyboardNavController)
+      Stimulus.register('command-palette', CommandPaletteController)
+    </script>
+
+    <style type="text/css">
+      body { font-family: 'Syne', sans-serif; background: linear-gradient(180deg, #180B0E 0%, #220E13 50%, #14080B 100%); color: #F4E8D7; min-height: 100vh; }
+      code, pre, .font-mono, kbd { font-family: 'Space Mono', monospace; }
+      .rust-border { border: 1px solid rgba(139, 58, 43, 0.4); }
+      .rust-hover:hover { border-color: #C85A32; }
+      .bg-rust-onion-card { background: linear-gradient(145deg, #241014 0%, #1A0B0E 100%); }
+      .bg-rust-onion-btn { background: linear-gradient(90deg, #C85A32 0%, #A04028 50%, #6E243A 100%); }
+      .bg-rust-onion-btn:hover { background: linear-gradient(90deg, #D86A42 0%, #B84A39 50%, #7E2A42 100%); }
+    </style>
+  </head>
+
+  <body class="h-full flex flex-col overflow-hidden bg-gradient-to-b from-[#180B0E] via-[#220E13] to-[#14080B] text-[#F4E8D7]" data-controller="command-palette">
+    <!-- Top Announcement Banner -->
+    <div class="h-7 bg-gradient-to-r from-[#C85A32] via-[#B84A39] to-[#6E243A] text-[#F4E8D7] text-xs font-mono font-bold tracking-wider uppercase flex items-center justify-between px-4 shrink-0 overflow-hidden select-none border-b border-[#C85A32]/40 shadow-md">
+      <div class="truncate flex items-center space-x-3">
+        <span>🐿️ GRIFFIN ATS</span>
+        <span>🌰</span>
+        <span>SIMPLE SKILL MATRICES & CANDIDATE PIPELINES</span>
+      </div>
+      <span class="hidden sm:inline font-bold text-[#F8DBCA]">ONLINE</span>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="h-14 rust-border border-t-0 bg-[#1D0C10]/90 px-6 flex items-center justify-between shrink-0 z-30 backdrop-blur-md">
+      <div class="flex items-center space-x-8">
+        <a href="/" class="flex items-center space-x-3 group">
+          <div class="w-8 h-8 bg-gradient-to-br from-[#C85A32] to-[#6E243A] text-lg flex items-center justify-center shadow-lg shadow-[#C85A32]/20 group-hover:scale-105 transition-transform">
+            🐿️
+          </div>
+          <span class="text-base font-extrabold tracking-wider font-mono text-[#F4E8D7]">GRIFFIN</span>
+        </a>
+
+        <nav class="hidden md:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase">
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/job_postings">Jobs</a>
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/companies">Companies</a>
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/candidates">Candidates</a>
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/analytics">Analytics</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <!-- Quick Search Button -->
+        <button type="button" data-action="click->command-palette#toggle" class="flex items-center space-x-2 px-3 py-1 text-xs font-mono text-[#D4B499] bg-[#14080B] rust-border hover:border-[#C85A32] hover:text-white transition-all shadow-inner">
+          <span>Search jobs or candidates...</span>
+          <kbd class="px-1.5 py-0.5 text-[9px] bg-[#2A1218] text-[#E58A67] rust-border font-bold">⌘K</kbd>
+        </button>
+
+        <div class="flex items-center space-x-2 pl-4 border-l border-[#8B3A2B]/40 text-xs font-mono text-[#D4B499]">
+          <span class="text-base">🐿️</span>
+          <span class="font-bold text-[#F4E8D7]">Evaluator</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex overflow-hidden">
+      <div class="flex-1 overflow-y-auto p-8 space-y-8 font-sans">
+  <div class="flex items-end justify-between border-b border-[#8B3A2B]/40 pb-6">
+    <div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-[#F4E8D7]">Reports & Analytics</h1>
+      <p class="text-xs text-[#D4B499] mt-1 font-mono">Overview of candidate quality, hiring activity, and pipeline metrics.</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bg-rust-onion-card rust-border p-6 font-mono space-y-3 shadow-md">
+  <span class="text-[9px] font-bold uppercase tracking-widest text-[#A47F6E] block">Total Candidates</span>
+  <div class="flex items-baseline justify-between">
+    <span class="text-2xl font-extrabold text-[#F4E8D7] font-mono tracking-tight">3</span>
+      <span class="text-[10px] font-bold px-2 py-0.5 uppercase bg-[#2A1218] text-[#E58A67] rust-border">
+        +14%
+      </span>
+  </div>
+</div>
+
+    <div class="bg-rust-onion-card rust-border p-6 font-mono space-y-3 shadow-md">
+  <span class="text-[9px] font-bold uppercase tracking-widest text-[#A47F6E] block">Active Job Openings</span>
+  <div class="flex items-baseline justify-between">
+    <span class="text-2xl font-extrabold text-[#F4E8D7] font-mono tracking-tight">2</span>
+      <span class="text-[10px] font-bold px-2 py-0.5 uppercase bg-[#2A1218] text-[#E58A67] rust-border">
+        +3
+      </span>
+  </div>
+</div>
+
+    <div class="bg-rust-onion-card rust-border p-6 font-mono space-y-3 shadow-md">
+  <span class="text-[9px] font-bold uppercase tracking-widest text-[#A47F6E] block">Average Quality Score</span>
+  <div class="flex items-baseline justify-between">
+    <span class="text-2xl font-extrabold text-[#F4E8D7] font-mono tracking-tight">4.61 / 5.0</span>
+      <span class="text-[10px] font-bold px-2 py-0.5 uppercase bg-[#2A1218] text-[#E58A67] rust-border">
+        +0.3
+      </span>
+  </div>
+</div>
+
+    <div class="bg-rust-onion-card rust-border p-6 font-mono space-y-3 shadow-md">
+  <span class="text-[9px] font-bold uppercase tracking-widest text-[#A47F6E] block">Pipeline Status</span>
+  <div class="flex items-baseline justify-between">
+    <span class="text-2xl font-extrabold text-[#F4E8D7] font-mono tracking-tight">Optimal</span>
+      <span class="text-[10px] font-bold px-2 py-0.5 uppercase bg-[#2A1218] text-[#E58A67] rust-border">
+        0 Bottlenecks
+      </span>
+  </div>
+</div>
+
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-rust-onion-card rust-border p-6 space-y-4 shadow-md">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-[#A47F6E] font-mono">Highest Rated Candidates</h2>
+      <div class="space-y-3">
+          <div class="flex items-center justify-between p-4 bg-[#180B0E] rust-border">
+            <div>
+              <span class="text-xs font-bold text-[#F4E8D7]">Alex Rivers</span>
+              <span class="text-[11px] text-[#D4B499] block font-mono">Senior Software Engineer</span>
+            </div>
+            <span class="inline-flex items-center space-x-1.5 px-3 py-1 text-xs font-mono font-bold uppercase bg-[#2A1218] text-[#E58A67] rust-border border-[#C85A32] shadow-sm">
+  <span>★ 92.5% MATCH</span>
+</span>
+
+          </div>
+          <div class="flex items-center justify-between p-4 bg-[#180B0E] rust-border">
+            <div>
+              <span class="text-xs font-bold text-[#F4E8D7]">Sophia Chen</span>
+              <span class="text-[11px] text-[#D4B499] block font-mono">Senior Software Engineer</span>
+            </div>
+            <span class="inline-flex items-center space-x-1.5 px-3 py-1 text-xs font-mono font-bold uppercase bg-[#2A1218] text-[#E58A67] rust-border border-[#C85A32] shadow-sm">
+  <span>★ 92.5% MATCH</span>
+</span>
+
+          </div>
+          <div class="flex items-center justify-between p-4 bg-[#180B0E] rust-border">
+            <div>
+              <span class="text-xs font-bold text-[#F4E8D7]">Dmitri Vasiliev</span>
+              <span class="text-[11px] text-[#D4B499] block font-mono">Senior Software Engineer</span>
+            </div>
+            <span class="inline-flex items-center space-x-1.5 px-3 py-1 text-xs font-mono font-bold uppercase bg-[#2A1218] text-[#E58A67] rust-border border-[#C85A32] shadow-sm">
+  <span>★ 92.5% MATCH</span>
+</span>
+
+          </div>
+      </div>
+    </div>
+
+    <div class="bg-rust-onion-card rust-border p-6 space-y-4 shadow-md">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-[#A47F6E] font-mono">Applicant Count by Position</h2>
+      <div class="space-y-3 text-xs text-[#D4B499]">
+          <div class="flex items-center justify-between p-4 bg-[#180B0E] rust-border font-mono">
+            <div>
+              <span class="font-bold text-[#F4E8D7] font-sans">Staff Fintech Platform Engineer</span>
+              <span class="text-[10px] text-[#D4B499] block">Vortex Financial Systems</span>
+            </div>
+            <span class="font-bold text-[#E58A67]">0 Applicants</span>
+          </div>
+          <div class="flex items-center justify-between p-4 bg-[#180B0E] rust-border font-mono">
+            <div>
+              <span class="font-bold text-[#F4E8D7] font-sans">Principal Rails Architect</span>
+              <span class="text-[10px] text-[#D4B499] block">General Client</span>
+            </div>
+            <span class="font-bold text-[#E58A67]">2 Applicants</span>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </main>
+
+    <div data-command-palette-target="modal" class="hidden fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6 md:p-20 bg-black/85 backdrop-blur-md flex items-start justify-center">
+  <div class="w-full max-w-xl bg-rust-onion-card rust-border border-[#C85A32] shadow-2xl overflow-hidden font-mono" data-action="click->event#stopPropagation">
+    <div class="flex items-center px-4 border-b border-[#8B3A2B]/40 bg-[#180B0E]">
+      <span class="text-base mr-3 shrink-0">🐿️</span>
+      <input type="text"
+             data-command-palette-target="input"
+             data-action="input->command-palette#search"
+             placeholder="Search jobs or candidates..."
+             class="w-full h-12 bg-transparent text-xs text-[#F4E8D7] placeholder-[#A47F6E] focus:outline-none uppercase font-mono tracking-wider" />
+      <button type="button" data-action="click->command-palette#close" class="text-[10px] text-[#D4B499] hover:text-[#F4E8D7] px-2 py-1 bg-[#281217] rust-border font-bold uppercase">ESC</button>
+    </div>
+
+    <div data-command-palette-target="resultsContainer" class="max-h-80 overflow-y-auto divide-y divide-[#281217] p-2">
+      <p class="text-xs text-[#A47F6E] p-4 font-sans">Type a candidate name or job title to search...</p>
+    </div>
+
+    <div class="px-4 py-2 bg-[#180B0E] border-t border-[#281217] flex items-center justify-between text-[10px] text-[#A47F6E] font-mono">
+      <span>Press <kbd class="px-1 py-0.5 bg-[#281217] text-[#E58A67]">⌘K</kbd> anytime to open</span>
+      <span>Griffin ATS</span>
+    </div>
+  </div>
+</div>
+
+  </body>
+</html>

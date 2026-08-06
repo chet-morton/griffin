@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html class="h-full bg-[#180B0E] text-[#F4E8D7] font-sans antialiased selection:bg-[#C85A32] selection:text-white">
+  <head>
+    <title>Griffin ATS | Simple Candidate Evaluation & Hiring</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="EH9EVQzFeQUji5n96qyJpAfs1Ns2T76sWAMasfbi_80eHfVTMflFKYQwbqrEJpWbCNCgA8nGUxkqo_90GTI82A" />
+    
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Turbo & Stimulus JavaScript Bundle for Hotwire Interactivity -->
+    <script type="module">
+      import * as Turbo from 'https://esm.sh/@hotwired/turbo@8.0.12'
+      import { Application, Controller } from 'https://esm.sh/@hotwired/stimulus@3.2.2'
+      
+      window.Turbo = Turbo
+      window.Stimulus = Application.start()
+
+      // Register Stimulus controllers
+      import PipelineDragController from '/javascript/controllers/pipeline_drag_controller.js'
+      import EvaluationMatrixController from '/javascript/controllers/evaluation_matrix_controller.js'
+      import KeyboardNavController from '/javascript/controllers/keyboard_nav_controller.js'
+      import CommandPaletteController from '/javascript/controllers/command_palette_controller.js'
+
+      Stimulus.register('pipeline-drag', PipelineDragController)
+      Stimulus.register('evaluation-matrix', EvaluationMatrixController)
+      Stimulus.register('keyboard-nav', KeyboardNavController)
+      Stimulus.register('command-palette', CommandPaletteController)
+    </script>
+
+    <style type="text/css">
+      body { font-family: 'Syne', sans-serif; background: linear-gradient(180deg, #180B0E 0%, #220E13 50%, #14080B 100%); color: #F4E8D7; min-height: 100vh; }
+      code, pre, .font-mono, kbd { font-family: 'Space Mono', monospace; }
+      .rust-border { border: 1px solid rgba(139, 58, 43, 0.4); }
+      .rust-hover:hover { border-color: #C85A32; }
+      .bg-rust-onion-card { background: linear-gradient(145deg, #241014 0%, #1A0B0E 100%); }
+      .bg-rust-onion-btn { background: linear-gradient(90deg, #C85A32 0%, #A04028 50%, #6E243A 100%); }
+      .bg-rust-onion-btn:hover { background: linear-gradient(90deg, #D86A42 0%, #B84A39 50%, #7E2A42 100%); }
+    </style>
+  </head>
+
+  <body class="h-full flex flex-col overflow-hidden bg-gradient-to-b from-[#180B0E] via-[#220E13] to-[#14080B] text-[#F4E8D7]" data-controller="command-palette">
+    <!-- Top Announcement Banner -->
+    <div class="h-7 bg-gradient-to-r from-[#C85A32] via-[#B84A39] to-[#6E243A] text-[#F4E8D7] text-xs font-mono font-bold tracking-wider uppercase flex items-center justify-between px-4 shrink-0 overflow-hidden select-none border-b border-[#C85A32]/40 shadow-md">
+      <div class="truncate flex items-center space-x-3">
+        <span>🐿️ GRIFFIN ATS</span>
+        <span>🌰</span>
+        <span>SIMPLE SKILL MATRICES & CANDIDATE PIPELINES</span>
+      </div>
+      <span class="hidden sm:inline font-bold text-[#F8DBCA]">ONLINE</span>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="h-14 rust-border border-t-0 bg-[#1D0C10]/90 px-6 flex items-center justify-between shrink-0 z-30 backdrop-blur-md">
+      <div class="flex items-center space-x-8">
+        <a href="/" class="flex items-center space-x-3 group">
+          <div class="w-8 h-8 bg-gradient-to-br from-[#C85A32] to-[#6E243A] text-lg flex items-center justify-center shadow-lg shadow-[#C85A32]/20 group-hover:scale-105 transition-transform">
+            🐿️
+          </div>
+          <span class="text-base font-extrabold tracking-wider font-mono text-[#F4E8D7]">GRIFFIN</span>
+        </a>
+
+        <nav class="hidden md:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider uppercase">
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/job_postings">Jobs</a>
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/companies">Companies</a>
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/candidates">Candidates</a>
+          <a class="text-[#D4B499] hover:text-[#E58A67] transition-colors" href="/analytics">Analytics</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <!-- Quick Search Button -->
+        <button type="button" data-action="click->command-palette#toggle" class="flex items-center space-x-2 px-3 py-1 text-xs font-mono text-[#D4B499] bg-[#14080B] rust-border hover:border-[#C85A32] hover:text-white transition-all shadow-inner">
+          <span>Search jobs or candidates...</span>
+          <kbd class="px-1.5 py-0.5 text-[9px] bg-[#2A1218] text-[#E58A67] rust-border font-bold">⌘K</kbd>
+        </button>
+
+        <div class="flex items-center space-x-2 pl-4 border-l border-[#8B3A2B]/40 text-xs font-mono text-[#D4B499]">
+          <span class="text-base">🐿️</span>
+          <span class="font-bold text-[#F4E8D7]">Evaluator</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex overflow-hidden">
+      <div class="flex-1 flex flex-col h-full font-sans overflow-hidden"
+     data-controller="keyboard-nav evaluation-matrix"
+     data-keyboard-nav-next-url-value=""
+     data-keyboard-nav-prev-url-value="/candidate_applications/4">
+
+  <!-- Header Bar -->
+  <div class="h-14 border-b border-[#8B3A2B]/40 bg-[#1D0C10]/90 px-8 flex items-center justify-between shrink-0 font-mono">
+    <div class="flex items-center space-x-4">
+      <a class="p-2 text-[#D4B499] hover:text-[#F4E8D7] bg-[#180B0E] rust-border text-xs" href="/job_postings/1/pipeline">
+        ← Back to Pipeline
+</a>
+      <div>
+        <h1 class="text-xs font-bold text-[#F4E8D7] flex items-center space-x-2 tracking-wider">
+          <span>Sophia Chen</span>
+          <span class="text-[#E58A67]">•</span>
+          <span class="text-[#E58A67]">Principal Rails Architect</span>
+        </h1>
+      </div>
+    </div>
+
+    <!-- Stepper Navigation -->
+    <div class="flex items-center space-x-4 text-xs text-[#D4B499]">
+      <span class="hidden sm:inline text-[11px]">Navigate: <kbd class="px-1.5 py-0.5 bg-[#2A1218] text-[#E58A67] rust-border font-bold">J</kbd> next / <kbd class="px-1.5 py-0.5 bg-[#2A1218] text-[#E58A67] rust-border font-bold">K</kbd> prev</span>
+      
+      <div class="flex items-center space-x-2 border-l border-[#8B3A2B]/40 pl-4">
+          <a class="px-2 py-1 bg-[#2A1218] hover:bg-[#3D1A22] text-[#F4E8D7] rust-border font-bold text-[10px]" href="/candidate_applications/4">
+            ← Previous (K)
+</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Split Pane Layout -->
+  <div class="flex-1 flex overflow-hidden">
+    <!-- LEFT PANE: Resume Artifact -->
+    <div class="w-1/2 border-r border-[#8B3A2B]/40 bg-[#180B0E] flex flex-col h-full overflow-hidden p-6 space-y-6">
+      <div class="bg-rust-onion-card rust-border p-6 space-y-4 shadow-lg">
+        <div class="flex items-start justify-between">
+          <div>
+            <span class="text-xs text-[#E58A67] font-bold font-mono">Candidate Profile</span>
+            <h2 class="text-2xl font-bold text-[#F4E8D7] mt-1">Sophia Chen</h2>
+            <p class="text-xs text-[#D4B499] mt-1 font-mono">Senior Software Engineer • sophia.chen@tech.io</p>
+          </div>
+
+          <div class="text-right font-mono">
+            <span class="text-[10px] text-[#A47F6E] uppercase tracking-widest block">Weighted Score</span>
+            <div class="text-3xl font-extrabold text-[#E58A67]" data-evaluation-matrix-target="overallScoreDisplay">
+              0.00
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs pt-3 border-t border-[#8B3A2B]/30 font-mono">
+          <div class="bg-[#180B0E] p-3 rust-border">
+            <span class="text-[#A47F6E] text-[10px] block uppercase">Current Stage</span>
+            <span class="text-[#F4E8D7] font-bold">Screening</span>
+          </div>
+          <div class="bg-[#180B0E] p-3 rust-border">
+            <span class="text-[#A47F6E] text-[10px] block uppercase">Estimated Comp</span>
+            <span class="text-[#E58A67] font-bold">$195,000 / yr</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Raw Resume Text -->
+      <div class="flex-1 overflow-y-auto space-y-3">
+        <div class="text-xs text-[#A47F6E] font-bold font-mono uppercase">Candidate Resume Text</div>
+        <div class="bg-rust-onion-card rust-border p-6 font-mono text-xs text-[#D4B499] whitespace-pre-wrap leading-relaxed shadow-inner">
+          Senior Full-Stack Engineer specializing in React, Next.js, and Ruby on Rails APIs. Strong background in microservices, GraphQL, Docker, and Redis. Passionate about slick UI/UX and high-density dashboard design.
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANE: Interactive Rubric Matrix Form -->
+    <div class="w-1/2 bg-[#180B0E] flex flex-col h-full overflow-hidden">
+      <div class="p-4 border-b border-[#8B3A2B]/40 bg-[#1D0C10] shrink-0 font-mono">
+        <h3 class="text-xs font-bold text-[#F4E8D7] uppercase tracking-wider">Skill Matrix Evaluation</h3>
+        <p class="text-xs text-[#D4B499] mt-0.5">Rate candidate performance on key skill rubrics (1 = Low, 5 = High)</p>
+      </div>
+
+      <!-- Evaluation Form -->
+      <form class="flex-1 flex flex-col overflow-hidden" action="/candidate_applications/5/evaluations" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="o0ffxFZljArCxxo55cDcqU79RGbZ-TECw9FWjmLjTpoREDz9pIECbLKCWOF1ZRmZmHgKfdYfKZiPVGnU-_jT8w" autocomplete="off" />
+        <div class="flex-1 p-6 overflow-y-auto space-y-6">
+
+            <div class="bg-rust-onion-card rust-border p-5 space-y-4 shadow-md"
+                 data-evaluation-matrix-target="requirementRow"
+                 data-weight="1.5"
+                 data-min-score="3">
+
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="flex items-center space-x-3">
+                    <h4 class="text-sm font-bold text-[#F4E8D7]">Frontend Hotwire &amp; Stimulus JS</h4>
+                    <span class="px-2 py-0.5 text-[10px] font-bold bg-[#2A1218] text-[#D4B499] rust-border font-mono">
+                      Weight: 1.5 (min: 3)
+                    </span>
+                  </div>
+                  <p class="text-xs text-[#D4B499] mt-1">Building responsive, zero-page-reload UIs with Turbo Streams and Stimulus JS controllers.</p>
+                </div>
+
+                <span data-status-badge class="px-2 py-0.5 text-[10px] font-bold uppercase bg-[#2A1218] text-[#A47F6E] rust-border font-mono">
+                  Unrated
+                </span>
+              </div>
+
+              <!-- Rating Selection Buttons (1-5) -->
+              <div class="flex items-center justify-between pt-3 border-t border-[#8B3A2B]/30 font-mono">
+                <span class="text-xs font-bold text-[#D4B499]">Score:</span>
+                <div class="flex space-x-2">
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[8][score]"
+                             value="1"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        1
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[8][score]"
+                             value="2"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        2
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[8][score]"
+                             value="3"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        3
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[8][score]"
+                             value="4"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        4
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[8][score]"
+                             value="5"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        5
+                      </div>
+                    </label>
+                </div>
+              </div>
+
+              <div>
+                <textarea name="evaluations[8][notes]"
+                          rows="2"
+                          placeholder="Add notes or feedback for this skill..."
+                          class="w-full bg-[#180B0E] rust-border p-3 text-xs text-[#F4E8D7] placeholder-[#A47F6E] focus:border-[#C85A32] focus:outline-none"></textarea>
+              </div>
+            </div>
+
+            <div class="bg-rust-onion-card rust-border p-5 space-y-4 shadow-md"
+                 data-evaluation-matrix-target="requirementRow"
+                 data-weight="2.5"
+                 data-min-score="4">
+
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="flex items-center space-x-3">
+                    <h4 class="text-sm font-bold text-[#F4E8D7]">PostgreSQL &amp; pgvector Performance</h4>
+                    <span class="px-2 py-0.5 text-[10px] font-bold bg-[#2A1218] text-[#D4B499] rust-border font-mono">
+                      Weight: 2.5 (min: 4)
+                    </span>
+                  </div>
+                  <p class="text-xs text-[#D4B499] mt-1">Query optimization, indexing strategies, vector embeddings, and zero N+1 execution.</p>
+                </div>
+
+                <span data-status-badge class="px-2 py-0.5 text-[10px] font-bold uppercase bg-[#2A1218] text-[#A47F6E] rust-border font-mono">
+                  Unrated
+                </span>
+              </div>
+
+              <!-- Rating Selection Buttons (1-5) -->
+              <div class="flex items-center justify-between pt-3 border-t border-[#8B3A2B]/30 font-mono">
+                <span class="text-xs font-bold text-[#D4B499]">Score:</span>
+                <div class="flex space-x-2">
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[6][score]"
+                             value="1"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        1
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[6][score]"
+                             value="2"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        2
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[6][score]"
+                             value="3"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        3
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[6][score]"
+                             value="4"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        4
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[6][score]"
+                             value="5"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        5
+                      </div>
+                    </label>
+                </div>
+              </div>
+
+              <div>
+                <textarea name="evaluations[6][notes]"
+                          rows="2"
+                          placeholder="Add notes or feedback for this skill..."
+                          class="w-full bg-[#180B0E] rust-border p-3 text-xs text-[#F4E8D7] placeholder-[#A47F6E] focus:border-[#C85A32] focus:outline-none"></textarea>
+              </div>
+            </div>
+
+            <div class="bg-rust-onion-card rust-border p-5 space-y-4 shadow-md"
+                 data-evaluation-matrix-target="requirementRow"
+                 data-weight="3.0"
+                 data-min-score="4">
+
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="flex items-center space-x-3">
+                    <h4 class="text-sm font-bold text-[#F4E8D7]">Ruby on Rails 8 / Architecture</h4>
+                    <span class="px-2 py-0.5 text-[10px] font-bold bg-[#2A1218] text-[#D4B499] rust-border font-mono">
+                      Weight: 3.0 (min: 4)
+                    </span>
+                  </div>
+                  <p class="text-xs text-[#D4B499] mt-1">Demonstrated experience designing high-scale Rails monoliths, Hotwire Turbo Frames, and Solid Queue.</p>
+                </div>
+
+                <span data-status-badge class="px-2 py-0.5 text-[10px] font-bold uppercase bg-[#2A1218] text-[#A47F6E] rust-border font-mono">
+                  Unrated
+                </span>
+              </div>
+
+              <!-- Rating Selection Buttons (1-5) -->
+              <div class="flex items-center justify-between pt-3 border-t border-[#8B3A2B]/30 font-mono">
+                <span class="text-xs font-bold text-[#D4B499]">Score:</span>
+                <div class="flex space-x-2">
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[5][score]"
+                             value="1"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        1
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[5][score]"
+                             value="2"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        2
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[5][score]"
+                             value="3"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        3
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[5][score]"
+                             value="4"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        4
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[5][score]"
+                             value="5"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        5
+                      </div>
+                    </label>
+                </div>
+              </div>
+
+              <div>
+                <textarea name="evaluations[5][notes]"
+                          rows="2"
+                          placeholder="Add notes or feedback for this skill..."
+                          class="w-full bg-[#180B0E] rust-border p-3 text-xs text-[#F4E8D7] placeholder-[#A47F6E] focus:border-[#C85A32] focus:outline-none"></textarea>
+              </div>
+            </div>
+
+            <div class="bg-rust-onion-card rust-border p-5 space-y-4 shadow-md"
+                 data-evaluation-matrix-target="requirementRow"
+                 data-weight="2.0"
+                 data-min-score="3">
+
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="flex items-center space-x-3">
+                    <h4 class="text-sm font-bold text-[#F4E8D7]">System Design &amp; Domain Modeling</h4>
+                    <span class="px-2 py-0.5 text-[10px] font-bold bg-[#2A1218] text-[#D4B499] rust-border font-mono">
+                      Weight: 2.0 (min: 3)
+                    </span>
+                  </div>
+                  <p class="text-xs text-[#D4B499] mt-1">Skinny controllers, service objects, clear model boundaries, and event-driven architecture.</p>
+                </div>
+
+                <span data-status-badge class="px-2 py-0.5 text-[10px] font-bold uppercase bg-[#2A1218] text-[#A47F6E] rust-border font-mono">
+                  Unrated
+                </span>
+              </div>
+
+              <!-- Rating Selection Buttons (1-5) -->
+              <div class="flex items-center justify-between pt-3 border-t border-[#8B3A2B]/30 font-mono">
+                <span class="text-xs font-bold text-[#D4B499]">Score:</span>
+                <div class="flex space-x-2">
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[7][score]"
+                             value="1"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        1
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[7][score]"
+                             value="2"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        2
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[7][score]"
+                             value="3"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        3
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[7][score]"
+                             value="4"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        4
+                      </div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio"
+                             name="evaluations[7][score]"
+                             value="5"
+                             
+                             data-action="change->evaluation-matrix#scoreChanged"
+                             class="peer sr-only" />
+                      <div class="w-10 h-10 bg-[#180B0E] rust-border text-[#D4B499] flex items-center justify-center text-xs font-bold peer-checked:bg-gradient-to-br peer-checked:from-[#C85A32] peer-checked:to-[#6E243A] peer-checked:border-[#C85A32] peer-checked:text-white hover:bg-[#2A1218] transition-all">
+                        5
+                      </div>
+                    </label>
+                </div>
+              </div>
+
+              <div>
+                <textarea name="evaluations[7][notes]"
+                          rows="2"
+                          placeholder="Add notes or feedback for this skill..."
+                          class="w-full bg-[#180B0E] rust-border p-3 text-xs text-[#F4E8D7] placeholder-[#A47F6E] focus:border-[#C85A32] focus:outline-none"></textarea>
+              </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-[#8B3A2B]/40 bg-[#1D0C10] flex items-center justify-between shrink-0 font-mono">
+          <span class="text-[11px] text-[#D4B499]">Evaluator: <strong class="text-[#F4E8D7]">Elena Rostova</strong></span>
+          <input type="submit" name="commit" value="Save Evaluation" class="px-6 py-2.5 text-xs font-bold text-white bg-rust-onion-btn cursor-pointer transition-all uppercase tracking-wider shadow-lg shadow-[#C85A32]/20" data-disable-with="Save Evaluation" />
+        </div>
+</form>    </div>
+  </div>
+</div>
+
+    </main>
+
+    <div data-command-palette-target="modal" class="hidden fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6 md:p-20 bg-black/85 backdrop-blur-md flex items-start justify-center">
+  <div class="w-full max-w-xl bg-rust-onion-card rust-border border-[#C85A32] shadow-2xl overflow-hidden font-mono" data-action="click->event#stopPropagation">
+    <div class="flex items-center px-4 border-b border-[#8B3A2B]/40 bg-[#180B0E]">
+      <span class="text-base mr-3 shrink-0">🐿️</span>
+      <input type="text"
+             data-command-palette-target="input"
+             data-action="input->command-palette#search"
+             placeholder="Search jobs or candidates..."
+             class="w-full h-12 bg-transparent text-xs text-[#F4E8D7] placeholder-[#A47F6E] focus:outline-none uppercase font-mono tracking-wider" />
+      <button type="button" data-action="click->command-palette#close" class="text-[10px] text-[#D4B499] hover:text-[#F4E8D7] px-2 py-1 bg-[#281217] rust-border font-bold uppercase">ESC</button>
+    </div>
+
+    <div data-command-palette-target="resultsContainer" class="max-h-80 overflow-y-auto divide-y divide-[#281217] p-2">
+      <p class="text-xs text-[#A47F6E] p-4 font-sans">Type a candidate name or job title to search...</p>
+    </div>
+
+    <div class="px-4 py-2 bg-[#180B0E] border-t border-[#281217] flex items-center justify-between text-[10px] text-[#A47F6E] font-mono">
+      <span>Press <kbd class="px-1 py-0.5 bg-[#281217] text-[#E58A67]">⌘K</kbd> anytime to open</span>
+      <span>Griffin ATS</span>
+    </div>
+  </div>
+</div>
+
+  </body>
+</html>
